@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.DCourseDao">
+    <resultMap type="com.model.DCourse" id="standardDCourseMap">
+        <id property="id" column="id" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="name" column="name" javaType="String" jdbcType="VARCHAR"/>
+        <result property="createDate" column="create_date" javaType="Date" jdbcType="TIMESTAMP"/>
+        <result property="updateDate" column="update_date" javaType="Date" jdbcType="TIMESTAMP"/>
+        <result property="fullScore" column="full_score" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="isDelete" column="is_delete" javaType="Integer" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="findAllCourses" resultMap="standardDCourseMap">
+        SELECT * FROM f_course where is_delete=0 ORDER BY update_date desc
+    </select>
+
+    <select id="findById" parameterType="int" resultMap="standardDCourseMap">
+        SELECT * FROM f_course WHERE id=#{cid} AND is_delete=0
+    </select>
+
+    <select id="findByName" parameterType="string" resultMap="standardDCourseMap">
+        SELECT * FROM f_course WHERE name=#{name} AND is_delete=0
+    </select>
+
+    <update id="updateCourse">
+        UPDATE f_course
+        SET NAME = #{name},
+        update_date = NOW(),
+        full_score = #{fullScore}
+        WHERE
+        id = #{cid}
+    </update>
+
+    <insert id="saveCourse">
+        INSERT INTO f_course (NAME, create_date, full_score)
+        VALUES
+        (
+        #{name},
+        NOW(),
+        #{fullScore}
+        )
+    </insert>
+
+    <update id="deleteCourse">
+        UPDATE f_course
+        SET update_date = NOW(),
+        is_delete = 1
+        WHERE
+        id = #{cid}
+    </update>
+
+</mapper>

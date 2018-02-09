@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.DStudentDao">
+    <resultMap type="com.model.DStudent" id="standardDStudentMap">
+        <id property="id" column="id" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="number" column="number" javaType="String" jdbcType="VARCHAR"/>
+        <result property="name" column="name" javaType="String" jdbcType="VARCHAR"/>
+        <result property="className" column="className" javaType="String" jdbcType="VARCHAR"/>
+        <result property="score" column="score" javaType="String" jdbcType="VARCHAR"/>
+        <result property="scoreBySelf" column="score_by_self" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="isPass" column="is_pass" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="selfDate" column="self_date" javaType="Date" jdbcType="TIMESTAMP"/>
+        <result property="createDate" column="create_date" javaType="Date" jdbcType="TIMESTAMP"/>
+        <result property="updateDate" column="update_date" javaType="Date" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="is_delete" javaType="Integer" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="findAllStudents" resultMap="standardDStudentMap">
+        SELECT * FROM f_student where is_delete=0 ORDER BY create_date desc
+    </select>
+
+    <select id="findById" parameterType="int" resultMap="standardDStudentMap">
+        SELECT * FROM f_student WHERE id=#{sid} AND is_delete=0
+    </select>
+
+    <select id="findByName" parameterType="string" resultMap="standardDStudentMap">
+        SELECT * FROM f_student WHERE name=#{name} AND is_delete=0
+    </select>
+
+    <update id="updateStudent">
+        UPDATE f_student
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="className != null">className = #{className},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="scoreBySelf != null">score_by_self = #{scoreBySelf},</if>
+            <if test="isPass != null">is_pass = #{isPass},</if>
+            <if test="selfDate != null">self_date = #{selfDate},</if>
+            <if test="updateDate != null">update_date = #{updateDate}</if>
+        </set>
+        WHERE
+        id = #{sid}
+    </update>
+
+    <insert id="saveStudent">
+        INSERT INTO f_student (number, NAME, className, create_date)
+        VALUES
+        (
+        #{number},
+        #{name},
+        #{className},
+        NOW()
+        )
+    </insert>
+
+    <update id="deleteStudent">
+        UPDATE f_student
+        SET update_date = NOW(),
+        is_delete = 1
+        WHERE
+        id = #{sid}
+    </update>
+
+</mapper>

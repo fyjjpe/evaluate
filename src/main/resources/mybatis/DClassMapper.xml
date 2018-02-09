@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.DClassDao">
+    <resultMap type="com.model.DClass" id="standardDClassMap">
+        <result property="id" column="id" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="name" column="name" javaType="String" jdbcType="VARCHAR"/>
+        <result property="course" column="course" javaType="String" jdbcType="VARCHAR"/>
+        <result property="createDate" column="create_date" javaType="Date" jdbcType="TIMESTAMP"/>
+        <result property="updateDate" column="update_date" javaType="Date" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="is_delete" javaType="Integer" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="findAllClasses" resultMap="standardDClassMap">
+        SELECT * FROM f_class WHERE is_delete=0 ORDER BY update_date desc
+    </select>
+
+    <select id="findById" parameterType="int" resultMap="standardDClassMap">
+        SELECT * FROM f_class WHERE id=#{cid} AND is_delete=0
+    </select>
+
+    <select id="findByName" parameterType="string" resultMap="standardDClassMap">
+        SELECT * FROM f_class WHERE name=#{name} AND is_delete=0
+    </select>
+
+    <update id="updateClass">
+        UPDATE f_class
+        SET NAME = #{name},
+         course = #{course},
+         update_date = NOW()
+        WHERE
+            id = #{cid}
+    </update>
+
+    <insert id="saveClass">
+        INSERT INTO f_class (NAME, course, create_date)
+        VALUES
+            (
+                #{name},
+                #{course},
+                NOW()
+            )
+    </insert>
+
+    <update id="deleteClass">
+        UPDATE f_class
+        SET update_date = NOW(),
+            is_delete = 1
+        WHERE
+        id = #{cid}
+    </update>
+</mapper>
